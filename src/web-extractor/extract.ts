@@ -3,6 +3,65 @@ import { Button } from "@web-extractor/element/button";
 import puppeteer, { Page } from "puppeteer";
 import { Link } from "@web-extractor/element/link";
 import { Image } from "@web-extractor/element/image";
+import { TextElement } from "@web-extractor/element/text";
+
+const extractTextElements = async (page: Page): Promise<TextElement[]> => {
+  const result: TextElement[] = [];
+
+  interface Candidate {
+    parents: number;
+    textLength: number;
+    text: string;
+    additionalPoints: number;
+    points: number;
+    sentencesCount: number;
+  }
+
+  const candidatesSorted: Candidate[] = await page.evaluate(() => {
+    const elements = Array.from(document.querySelectorAll("article, p, div"));
+
+    const candidates: Candidate[] = [];
+
+    for (const element of elements) {
+      const parentsCount =
+        element.parentElement?.querySelectorAll("*").length || 0;
+      const textContent = element.textContent?.trim() || "";
+      const textContentLength = textContent?.length || 0;
+
+      if (textContentLength > 0) {
+        candidates.push({
+          parents: parentsCount,
+          textLength: textContentLength,
+          text: textContent.trim(),
+          additionalPoints:
+            element.tagName === "P" || element.tagName == "article" ? 50 : 0,
+          points: textContentLength * 50 + parentsCount * 5,
+          sentencesCount: textContent.split("\n").join(" ").split(".").length,
+        });
+      }
+    }
+
+    const totalPoints = (candadiate: Candidate) => {
+      return (
+        candadiate.sentencesCount * 100 +
+        candadiate.points +
+        candadiate.additionalPoints
+      );
+    };
+
+    const candidatesSorted: Candidate[] = candidates.sort((a, b) => {
+      return totalPoints(b) - totalPoints(a);
+    });
+
+    return candidatesSorted.slice(0, 10);
+  });
+
+  for (const candiate of candidatesSorted) {
+    result.push(new TextElement(candiate.text));
+  }
+
+  return result;
+};
 
 const extractImages = async (page: Page): Promise<Image[]> => {
   const result: Image[] = [];
@@ -122,9 +181,10 @@ export const extract = async (url: string): Promise<View> => {
 
   const view = new View();
 
-  view.addElements(await extractButtons(page));
-  view.addElements(await extractLinks(page));
-  view.addElements(await extractImages(page));
+  //view.addElements(await extractButtons(page));
+  //view.addElements(await extractLinks(page));
+  //view.addElements(await extractImages(page));
+  view.addElements(await extractTextElements(page));
 
   console.log(view.all);
 
