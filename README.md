@@ -11,9 +11,9 @@ This library is made to make AI agents operate on web easier. It scraps the page
 ## Use in the code
 
 ```
-import { extract } from "@devell/web-extractor";
+import extractor from "@devell/web-extractor";
 
-const view = extract("https://example.com");
+const view: extractor.View = extractor.extract("https://example.com");
 
 // to access links
 

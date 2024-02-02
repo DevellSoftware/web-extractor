@@ -1,4 +1,9 @@
 import { extract } from "@web-extractor/extract";
 import { View } from "@web-extractor/view/view";
 
-export { extract, View };
+const extractor = {
+  extract,
+  View,
+};
+
+export default extractor;
