@@ -35,17 +35,17 @@ const extractTextElements = async (page: Page): Promise<TextElement[]> => {
           text: textContent.trim(),
           additionalPoints:
             element.tagName === "P" || element.tagName == "article" ? 50 : 0,
-          points: textContentLength * 50 + parentsCount * 5,
+          points: 0,
           sentencesCount: textContent.split("\n").join(" ").split(".").length,
         });
       }
     }
 
-    const totalPoints = (candadiate: Candidate) => {
+    const totalPoints = (candidate: Candidate) => {
       return (
-        candadiate.sentencesCount * 100 +
-        candadiate.points +
-        candadiate.additionalPoints
+        candidate.sentencesCount * 100 +
+        candidate.additionalPoints +
+        candidate.textLength * 100
       );
     };
 
@@ -53,7 +53,7 @@ const extractTextElements = async (page: Page): Promise<TextElement[]> => {
       return totalPoints(b) - totalPoints(a);
     });
 
-    return candidatesSorted.slice(0, 10);
+    return candidatesSorted.slice(0, 1000);
   });
 
   for (const candiate of candidatesSorted) {
