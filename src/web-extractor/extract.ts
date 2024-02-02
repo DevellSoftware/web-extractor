@@ -12,13 +12,29 @@ const extractTextElements = async (page: Page): Promise<TextElement[]> => {
     parents: number;
     textLength: number;
     text: string;
-    additionalPoints: number;
-    points: number;
     sentencesCount: number;
+    x: number;
+    y: number;
+    width: number;
+    height: number;
   }
 
   const candidatesSorted: Candidate[] = await page.evaluate(() => {
-    const elements = Array.from(document.querySelectorAll("article, p, div"));
+    const elements = Array.from(
+      document.querySelectorAll("div > p, td > p, article, body > p")
+    );
+
+    elements.forEach((element) => {
+      element.querySelectorAll("style").forEach((style) => {
+        style.innerHTML = "";
+      });
+    });
+
+    elements.forEach((element) => {
+      element.querySelectorAll("script").forEach((script) => {
+        script.innerHTML = "";
+      });
+    });
 
     const candidates: Candidate[] = [];
 
@@ -33,19 +49,20 @@ const extractTextElements = async (page: Page): Promise<TextElement[]> => {
           parents: parentsCount,
           textLength: textContentLength,
           text: textContent.trim(),
-          additionalPoints:
-            element.tagName === "P" || element.tagName == "article" ? 50 : 0,
-          points: 0,
           sentencesCount: textContent.split("\n").join(" ").split(".").length,
+          x: element.getBoundingClientRect().x,
+          y: element.getBoundingClientRect().y,
+          width: element.getBoundingClientRect().width,
+          height: element.getBoundingClientRect().height,
         });
       }
     }
 
     const totalPoints = (candidate: Candidate) => {
       return (
-        candidate.sentencesCount * 100 +
-        candidate.additionalPoints +
-        candidate.textLength * 100
+        candidate.sentencesCount * 100 -
+        //candidate.textLength * 10 -
+        candidate.parents * 30
       );
     };
 
@@ -53,11 +70,15 @@ const extractTextElements = async (page: Page): Promise<TextElement[]> => {
       return totalPoints(b) - totalPoints(a);
     });
 
-    return candidatesSorted.slice(0, 1000);
+    return candidatesSorted.slice(0, 10);
   });
 
-  for (const candiate of candidatesSorted) {
-    result.push(new TextElement(candiate.text));
+  for (const candidate of candidatesSorted) {
+    const textElement = new TextElement(candidate.text);
+    textElement.setPosition(candidate.x, candidate.y);
+    textElement.setSize(candidate.width, candidate.height);
+
+    result.push(textElement);
   }
 
   return result;
@@ -181,12 +202,10 @@ export const extract = async (url: string): Promise<View> => {
 
   const view = new View();
 
-  //view.addElements(await extractButtons(page));
-  //view.addElements(await extractLinks(page));
-  //view.addElements(await extractImages(page));
+  view.addElements(await extractButtons(page));
+  view.addElements(await extractLinks(page));
+  view.addElements(await extractImages(page));
   view.addElements(await extractTextElements(page));
-
-  console.log(view.all);
 
   return view;
 };

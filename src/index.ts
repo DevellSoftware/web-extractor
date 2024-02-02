@@ -1,7 +1,4 @@
-import { extract } from "./web-extractor/extract";
-console.log("Hello world!");
+import { extract } from "@web-extractor/extract";
+import { View } from "@web-extractor/view/view";
 
-(async () => {
-  await extract("https://wikipedia.org");
-  console.log("Extracted!");
-})();
+export { extract, View };
