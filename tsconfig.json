@@ -1,9 +1,11 @@
 {
   "compilerOptions": {
-    "target": "ESNext",
+    "target": "EsNext",
+    "lib": ["ESNext", "DOM", "DOM.Iterable", "ScriptHost"],
     "strictPropertyInitialization": false,
     "module": "NodeNext",
     "esModuleInterop": true,
+    "moduleResolution": "NodeNext",
     "forceConsistentCasingInFileNames": true,
     "strict": true,
     "sourceMap": true,

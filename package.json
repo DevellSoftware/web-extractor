@@ -1,16 +1,15 @@
 {
   "name": "@devell/web-extractor",
-  "version": "0.1.7",
+  "version": "0.1.10",
   "description": "Devell Library for extracting content elements from a webpage. The purpuose of this package is to make it easier for AI agents to operate a web content.",
   "main": "dist/index.js",
-  "type": "module",
   "types": "dist/index.d.ts",
   "repository": "https://github.com/DevellSoftware/web-extractor",
   "author": "Devell Software Agency - Filip Gorny <filip.gorny@gmail.com>",
   "license": "MIT",
   "typings": "dist/index.d.ts",
   "scripts": {
-    "test": "./node_modules/jest/bin/jest.js --silent=false",
+    "test": "./node_modules/jest/bin/jest.js --silent=false --verbose",
     "build": "tsc -p tsconfig.json && tsc-alias",
     "dev": "ts-node-dev -r tsconfig-paths/register ./src/index.ts"
   },
