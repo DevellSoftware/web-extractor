@@ -1,6 +1,6 @@
 {
   "name": "@devell/web-extractor",
-  "version": "0.1.11",
+  "version": "0.1.12",
   "description": "Devell Library for extracting content elements from a webpage. The purpuose of this package is to make it easier for AI agents to operate a web content.",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -15,8 +15,13 @@
   },
   "dependencies": {
     "@types/jest": "^29.5.11",
+    "dotenv": "^16.4.1",
     "jest": "^29.7.0",
-    "puppeteer": "^21.6.1",
+    "puppeteer": "^21.11.0",
+    "puppeteer-extra": "^3.3.6",
+    "puppeteer-extra-plugin-adblocker": "^2.13.6",
+    "puppeteer-extra-plugin-proxy": "^1.0.2",
+    "puppeteer-extra-plugin-stealth": "^2.11.2",
     "ts-jest": "^29.1.1",
     "ts-node": "^10.9.1",
     "ts-node-dev": "^2.0.0",

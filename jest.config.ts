@@ -8,6 +8,7 @@ const jestConfig: JestConfigWithTsJest = {
   moduleNameMapper: {
     "^@web-extractor/(.*)$": ["<rootDir>/src/web-extractor/$1"],
   },
+  setupFiles: ["dotenv/config"],
 };
 
 export default jestConfig;

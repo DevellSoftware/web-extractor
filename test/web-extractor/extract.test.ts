@@ -27,5 +27,13 @@ describe("Extract method", () => {
         previousElement = element;
       }
     }
+
+    for (const sequence of view.sequences as Sequence[]) {
+      const topChildren = sequence.children.slice(0, 3);
+
+      for (const child of topChildren) {
+        console.log(child.text);
+      }
+    }
   });
 });

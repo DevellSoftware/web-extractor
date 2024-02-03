@@ -1,12 +1,41 @@
 import { View } from "@web-extractor/view/view";
-import puppeteer, { Page } from "puppeteer";
+import puppeteer from "puppeteer-extra";
+import StealthPlugin from "puppeteer-extra-plugin-stealth";
+import AdBlocker from "puppeteer-extra-plugin-adblocker";
 import { extractButtons } from "@web-extractor/extractors/extract-buttons";
 import { extractLinks } from "@web-extractor/extractors/extract-links";
 import { extractImages } from "@web-extractor/extractors/extract-images";
 import { extractTextElements } from "@web-extractor/extractors/extract-text-elements";
 import { extractSequences } from "@web-extractor/extractors/extract-sequences";
+import { WebshareSource } from "@web-extractor/proxy/webshare.source";
 
-export const extract = async (url: string): Promise<View> => {
+const ProxyPlugin = require("puppeteer-extra-plugin-proxy");
+
+puppeteer.use(StealthPlugin());
+puppeteer.use(AdBlocker());
+
+export interface ExtractOptions {
+  useProxy: boolean;
+}
+
+export const extract = async (
+  url: string,
+  options: ExtractOptions = { useProxy: false }
+): Promise<View> => {
+  if (options.useProxy) {
+    const proxySource = new WebshareSource();
+    const proxies = await proxySource.load();
+    const proxy = proxies[Math.floor(Math.random() * proxies.length)];
+
+    puppeteer.use(
+      ProxyPlugin({
+        proxy: `${proxy.address}:${proxy.port}`,
+        username: proxy.username,
+        password: proxy.password,
+      })
+    );
+  }
+
   const browser = await puppeteer.launch({
     headless: "new",
     ignoreDefaultArgs: [],
