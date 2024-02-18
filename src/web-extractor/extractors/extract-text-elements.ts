@@ -81,8 +81,6 @@ export const extractTextElements = async (
   let selected: Candidate[] = [];
 
   selected.push(...candidatesWithTitle);
-  for (const candidate of candidatesWithTitle) {
-  }
 
   if (selected.length < candidatesWithoutTitle.length) {
     selected.push(...candidatesWithoutTitle);
