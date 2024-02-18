@@ -11,7 +11,8 @@
   "scripts": {
     "test": "./node_modules/jest/bin/jest.js --silent=false --verbose",
     "build": "tsc -p tsconfig.json && tsc-alias",
-    "dev": "ts-node-dev -r tsconfig-paths/register ./src/index.ts"
+    "dev": "ts-node-dev -r tsconfig-paths/register ./src/index.ts",
+    "try": "ts-node -r tsconfig-paths/register ./src/try.ts"
   },
   "dependencies": {
     "@types/jest": "^29.5.11",

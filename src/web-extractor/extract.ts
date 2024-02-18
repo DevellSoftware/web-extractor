@@ -40,9 +40,9 @@ export const extract = async (
     headless: "new",
     ignoreDefaultArgs: [],
     timeout: 3000,
-    dumpio: true,
+    dumpio: false,
     args: ["--disable-extentions"],
-    executablePath: "/usr/bin/google-chrome-stable",
+    executablePath: process.env.CHROMIUM_PATH ?? "/snap/bin/chromium",
   });
 
   const page = await browser.newPage();
@@ -54,10 +54,6 @@ export const extract = async (
       `${message.type().substr(0, 3).toUpperCase()} ${message.text()}`
     )
   );
-
-  await page.evaluate(() => {
-    console.log(document.title);
-  });
 
   const view = new View();
 

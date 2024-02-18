@@ -27,13 +27,13 @@ describe("Extract method", () => {
         previousElement = element;
       }
     }
-
-    for (const sequence of view.sequences as Sequence[]) {
-      const topChildren = sequence.children.slice(0, 3);
-
-      for (const child of topChildren) {
-        console.log(child.text);
-      }
-    }
   });
+
+  it("should extract texts", async () => {
+    const view = await extract("https://en.wikipedia.org/wiki/AC/DC");
+
+    expect(view.texts.length).toBeGreaterThan(0);
+
+    view.texts.forEach(console.log);
+  }, 20000);
 });
